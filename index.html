@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <title>БыстроСмета — Мгновенный просчёт себестоимости материалов</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="header-inner">
+            <div class="brand">
+                <div class="brand-mark"><i class="fa-solid fa-bolt"></i></div>
+                БыстроСмета
+            </div>
+            <nav class="tabs">
+                <button class="active" data-tab="upload"><i class="fa-solid fa-cloud-arrow-up"></i>&nbsp; Новый расчёт</button>
+                <button data-tab="result"><i class="fa-solid fa-table-list"></i>&nbsp; Результат</button>
+                <button data-tab="history"><i class="fa-solid fa-clock-rotate-left"></i>&nbsp; История</button>
+            </nav>
+            <div class="header-cta">
+                <button class="theme-toggle" id="themeToggle" title="Сменить тему">
+                    <i class="fa-solid fa-moon"></i>
+                    <i class="fa-solid fa-sun"></i>
+                </button>
+                <div class="region-dropdown" id="regionDropdown">
+                    <div class="region-pill" id="regionTrigger">
+                        <i class="fa-solid fa-location-dot" style="color:var(--accent)"></i>
+                        <span id="regionLabel">Москва</span>
+                        <i class="fa-solid fa-chevron-down" style="font-size:10px; color:var(--muted); transition: transform .2s;"></i>
+                    </div>
+                    <div class="region-menu" id="regionMenu">
+                        <div class="region-search">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="regionSearch" placeholder="Найти город…">
+                        </div>
+                        <div class="region-list" id="regionList">
+                            <div class="region-item active" data-region="Москва">
+                                <i class="fa-solid fa-city"></i>
+                                <span>Москва</span>
+                                <span class="region-badge">столица</span>
+                            </div>
+                            <div class="region-item" data-region="Санкт-Петербург">
+                                <i class="fa-solid fa-ship"></i>
+                                <span>Санкт-Петербург</span>
+                            </div>
+                            <div class="region-item" data-region="Екатеринбург">
+                                <i class="fa-solid fa-mountain"></i>
+                                <span>Екатеринбург</span>
+                            </div>
+                            <div class="region-item" data-region="Новосибирск">
+                                <i class="fa-solid fa-snowflake"></i>
+                                <span>Новосибирск</span>
+                            </div>
+                            <div class="region-item" data-region="Казань">
+                                <i class="fa-solid fa-mosque"></i>
+                                <span>Казань</span>
+                            </div>
+                            <div class="region-item" data-region="Краснодар">
+                                <i class="fa-solid fa-sun"></i>
+                                <span>Краснодар</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="screen active" id="screen-upload">
+            <div class="hero-head">
+                <span class="eyebrow"><i class="fa-solid fa-gauge-high"></i> Просчёт за 2–5 минут</span>
+                <h1>Сколько будут стоить материалы?</h1>
+                <p>Загрузите спецификацию — Excel, PDF или фото. Система распознает позиции, найдёт актуальные цены из открытых источников и соберёт готовую смету закупки.</p>
+            </div>
+
+            <div class="upload-grid">
+                <div>
+                    <div class="dropzone" id="dropzone">
+                        <div class="drop-icon"><i class="fa-solid fa-file-arrow-up"></i></div>
+                        <h3>Перетащите файл сюда</h3>
+                        <p>или нажмите, чтобы выбрать. До 500 позиций за один расчёт.</p>
+                        <div class="formats">
+                            <span class="fmt">XLSX / XLS</span>
+                            <span class="fmt">PDF</span>
+                            <span class="fmt">JPG / PNG</span>
+                        </div>
+                        <button class="btn btn-primary browse-btn" type="button"><i class="fa-solid fa-folder-open"></i> Выбрать файл</button>
+                        <input type="file" id="fileInput" accept=".xlsx,.xls,.pdf,.jpg,.jpeg,.png" hidden>
+                    </div>
+
+                    <div id="filePreview"></div>
+
+                    <div class="sample-hint">
+                        <i class="fa-solid fa-lightbulb" style="color:var(--yellow)"></i>
+                        Нет файла под рукой? <a id="demoBtn">Запустить демо-расчёт</a> на примере спецификации.
+                    </div>
+                </div>
+
+                <div class="side-card">
+                    <h4>Как это работает</h4>
+                    <div class="step-row">
+                        <div class="step-num">1</div>
+                        <div><div class="t">Распознавание</div><div class="d">OCR и AI извлекают наименование, кол-во и единицы измерения.</div></div>
+                    </div>
+                    <div class="step-row">
+                        <div class="step-num">2</div>
+                        <div><div class="t">Сопоставление с КСР</div><div class="d">Поиск позиции в классификаторе строительных ресурсов.</div></div>
+                    </div>
+                    <div class="step-row">
+                        <div class="step-num">3</div>
+                        <div><div class="t">Поиск цен</div><div class="d">ФГИС ЦС, Стройинформресурс, Bidzaar — параллельно.</div></div>
+                    </div>
+                    <div class="step-row">
+                        <div class="step-num">4</div>
+                        <div><div class="t">Готовая смета</div><div class="d">Медианная цена, итог и экспорт в Excel / PDF.</div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="screen" id="screen-processing">
+            <div class="proc-wrap">
+                <div class="proc-ring">
+                    <svg width="96" height="96">
+                        <circle cx="48" cy="48" r="42" fill="none" stroke="#e6e4df" stroke-width="8"/>
+                        <circle id="ringFill" cx="48" cy="48" r="42" fill="none" stroke="#d94f2b" stroke-width="8" stroke-linecap="round" stroke-dasharray="263.9" stroke-dashoffset="263.9"/>
+                    </svg>
+                    <div class="pct" id="procPct">0%</div>
+                </div>
+                <h2>Обрабатываем ваш файл</h2>
+                <p id="procFile">спецификация.xlsx</p>
+                <div class="proc-steps" id="procSteps">
+                    <div class="pstep" data-i="0"><div class="ic"><i class="fa-solid fa-file-lines"></i></div><div><div class="txt">Распознавание позиций</div><div class="sub">Извлечение таблицы из файла</div></div></div>
+                    <div class="pstep" data-i="1"><div class="ic"><i class="fa-solid fa-list-check"></i></div><div><div class="txt">Сопоставление с КСР</div><div class="sub">Поиск кодов классификатора</div></div></div>
+                    <div class="pstep" data-i="2"><div class="ic"><i class="fa-solid fa-magnifying-glass-dollar"></i></div><div><div class="txt">Поиск актуальных цен</div><div class="sub">ФГИС ЦС · Стройинформресурс · Bidzaar</div></div></div>
+                    <div class="pstep" data-i="3"><div class="ic"><i class="fa-solid fa-calculator"></i></div><div><div class="txt">Расчёт себестоимости</div><div class="sub">Агрегация и подсчёт итогов</div></div></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="screen" id="screen-result">
+            <div class="result-head">
+                <div>
+                    <h1>Смета закупки</h1>
+                    <div class="sub" id="resultSub">Расчёт по региону «Москва» · 6 позиций</div>
+                </div>
+                <div class="result-actions">
+                    <button class="btn btn-ghost" id="exportExcelBtn"><i class="fa-solid fa-file-excel" style="color:var(--green)"></i> Excel</button>
+                    <button class="btn btn-ghost" id="exportPdfBtn"><i class="fa-solid fa-file-pdf" style="color:var(--accent)"></i> PDF</button>
+                    <button class="btn btn-primary" id="newCalcBtn"><i class="fa-solid fa-plus"></i> Новый</button>
+                </div>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat"><div class="k"><i class="fa-solid fa-boxes-stacked"></i> Позиций</div><div class="v" id="stPos">6</div></div>
+                <div class="stat"><div class="k"><i class="fa-solid fa-circle-check" style="color:var(--green)"></i> Цены найдены</div><div class="v" id="stFound">5</div></div>
+                <div class="stat"><div class="k"><i class="fa-solid fa-triangle-exclamation" style="color:var(--yellow)"></i> Ручной ввод</div><div class="v" id="stManual">1</div></div>
+                <div class="stat accent"><div class="k"><i class="fa-solid fa-ruble-sign"></i> Итого себестоимость</div><div class="v" id="stTotal">—</div></div>
+            </div>
+
+            <div class="table-toolbar">
+                <div class="price-mode">
+                    <button class="active" data-mode="median" id="modeMedian">Медианная цена</button>
+                    <button data-mode="min" id="modeMin">Минимальная цена</button>
+                </div>
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="tblSearch" placeholder="Поиск по позициям…">
+                </div>
+            </div>
+
+            <div class="table-card">
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width:44px">№</th>
+                                <th>Наименование</th>
+                                <th style="width:80px">Ед.</th>
+                                <th style="width:80px">Кол-во</th>
+                                <th style="width:130px; text-align:right">Цена за ед.</th>
+                                <th style="width:150px">Источник</th>
+                                <th style="width:130px; text-align:right">Итого</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tblBody"></tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="6" style="text-align:right">ИТОГО СЕБЕСТОИМОСТЬ ЗАКУПКИ</td>
+                                <td class="grand" id="tblGrand">—</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="screen" id="screen-history">
+            <div class="section-title">История расчётов</div>
+            <div class="section-sub">Сохранённые сметы. Нажмите на карточку, чтобы открыть детали.</div>
+            <div class="hist-grid" id="histGrid"></div>
+        </section>
+    </main>
+
+    <div id="toast"><i class="fa-solid fa-circle-check"></i><span id="toastMsg"></span></div>
+
+    <script src="js/data.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
